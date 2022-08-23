@@ -1,9 +1,9 @@
 import React from "react";
 import "../styles/game-styles.css";
 
-const cellSize = 20;
-const boardWidth = 800;
-const boardHeight = 600;
+const celulasize = 20;
+const tabuleiroWidth = 800;
+const tabuleiroHeight = 600;
 
 class Cell extends React.Component {
   render() {
@@ -12,61 +12,76 @@ class Cell extends React.Component {
       <div
         className="Cell"
         style={{
-          left: `${cellSize * x + 1}px`,
-          top: `${cellSize * y + 1}px`,
-          width: `${cellSize - 1}px`,
-          height: `${cellSize - 1}px`,
+          left: `${celulasize * x + 1}px`,
+          top: `${celulasize * y + 1}px`,
+          width: `${celulasize - 1}px`,
+          height: `${celulasize - 1}px`,
         }}
       />
     );
   }
 }
 
-class Board extends React.Component {
+class Tabuleiro extends React.Component {
   constructor() {
     super();
-    this.rows = boardHeight / cellSize;
-    this.cols = boardWidth / cellSize;
+    //DETERMINA LARGURA DAS CELUALS
+    this.rows = tabuleiroHeight / celulasize;
 
-    this.board = this.MakeEmptyBoard();
+    //DETERMINA ALTURA DAS CELULAS
+    this.cols = tabuleiroWidth / celulasize;
+
+    //CRIA UM NOVO TABULEIRO
+    this.tabuleiro = this.criarTabuleiroVazio();
   }
 
-  state = { cells: [], interval: 100, isRunning: false };
+  /*STATE DO COMPONENTE QUE DETERMINA SE UM TABULEIRO ESTÁ POPULADO OU NÃO
+   O INTERVALO DE TEMPO QUE O JOGADOR COLOCOU PARA AS GERAÇÕES MUDAREM E 
+   UMA BOOLEAN PARA DETERMIANR SE O JOGO ESTÁ EM EXECUÇÃO OU NÃO
+  */
+  state = { celulas: [], interval: 100, isRunning: false };
 
-  runIteration() {
-    let newBoard = this.makeEmptyBoard();
+  //INICIA UM TABULEIRO VAZIO E DETERMINA SE AS CELULAS SÃO VIZINHAS OU NÃO
+  executarIteracao() {
+    let novoTabuleiro = this.criarTabuleiroVazio();
 
     for (let y = 0; y < this.rows; y++) {
       for (let x = 0; x < this.cols; x++) {
-        let neighbors = this.calculateNeighbors(this.board, x, y);
-        if (this.board[y][x]) {
-          if (neighbors === 2 || neighbors === 3) {
-            newBoard[y][x] = true;
+        let vizinhos = this.calcularVizinhos(this.tabuleiro, x, y);
+        if (this.tabuleiro[y][x]) {
+          if (vizinhos === 2 || vizinhos === 3) {
+            novoTabuleiro[y][x] = true;
           } else {
-            newBoard[y][x] = false;
+            novoTabuleiro[y][x] = false;
           }
         } else {
-          if (!this.board[y][x] && neighbors === 3) {
-            newBoard[y][x] = true;
+          if (!this.tabuleiro[y][x] && vizinhos === 3) {
+            novoTabuleiro[y][x] = true;
           }
         }
       }
     }
 
-    this.board = newBoard;
-    this.setState({ cells: this.makeCells() });
+    //ATUALIZA O TABULEIRO DE ACORDO COM AS CÉLULAS ATIVAS
+    this.tabuleiro = novoTabuleiro;
 
+    //CRIA NOVAS CÉLULAS
+    this.setState({ celulas: this.criarCelulas() });
+
+    //PERCORRE AS DIFERENTES GERAÇÕES
     this.timeoutHandler = window.setTimeout(() => {
-      this.runIteration();
+      this.executarIteracao();
     }, this.state.interval);
   }
 
-  runGame = () => {
+  //INICIA O JOGO
+  iniciarJogo = () => {
     this.setState({ isRunning: true });
-    this.runIteration();
+    this.executarIteracao();
   };
 
-  stopGame = () => {
+  //PARA O JOGO
+  pararJogo = () => {
     this.setState({ isRunning: false });
     if (this.timeoutHandler) {
       window.clearTimeout(this.timeoutHandler);
@@ -74,37 +89,41 @@ class Board extends React.Component {
     }
   };
 
-  handleIntervalChange = (event) => {
+  //TRATA A MUDANÇA DE GERAÇÕES
+  tratarMudancaIntervalo = (event) => {
     this.setState({ interval: event.target.value });
   };
 
-  MakeEmptyBoard = () => {
-    let board = [];
+  //CRIA UM NOVO TABULEIRO VAZIO
+  criarTabuleiroVazio = () => {
+    let tabuleiro = [];
     for (let y = 0; y < this.rows; y++) {
-      board[y] = [];
+      tabuleiro[y] = [];
 
       for (let x = 0; x < this.cols; x++) {
-        board[y][x] = false;
+        tabuleiro[y][x] = false;
       }
     }
 
-    return board;
+    return tabuleiro;
   };
 
-  MakeCells = () => {
-    let cells = [];
+  //CRIA CADA CELULA
+  criarCelulas = () => {
+    let celulas = [];
     for (let y = 0; y < this.rows; y++) {
       for (let x = 0; x < this.cols; x++) {
-        if (this.board[y][x]) {
-          cells.push({ x, y });
+        if (this.tabuleiro[y][x]) {
+          celulas.push({ x, y });
         }
       }
     }
-    return cells;
+    return celulas;
   };
 
+  //IDENTIFICA CADA LOCALIZAÇÃO DE CADA CELULA NA PÁGINA
   getElementOffset = () => {
-    this.rect = this.boardRef.getBoundingClientRect();
+    this.rect = this.tabuleiroRef.getBoundingClientRect();
     this.doc = document.documentElement;
     return {
       x: this.rect.left + window.pageXOffset - this.doc.clientLeft,
@@ -112,20 +131,22 @@ class Board extends React.Component {
     };
   };
 
-  handleClick = (event) => {
+  //TRATA AS CÉLULAS QUE FORAM SELECIONADAS E AS QUE NÃO PARA RENDERIZAR
+  tratarClick = (event) => {
     const elemOffset = this.getElementOffset();
     const offsetX = event.clientX - elemOffset.x;
     const offsetY = event.clientY - elemOffset.y;
-    const x = Math.floor(offsetX / cellSize);
-    const y = Math.floor(offsetY / cellSize);
+    const x = Math.floor(offsetX / celulasize);
+    const y = Math.floor(offsetY / celulasize);
     if (x >= 0 && x <= this.cols && y >= 0 && y <= this.rows) {
-      this.board[y][x] = !this.board[y][x];
+      this.tabuleiro[y][x] = !this.tabuleiro[y][x];
     }
-    this.setState({ cells: this.MakeCells() });
+    this.setState({ celulas: this.criarCelulas() });
   };
 
-  calculateNeighbors(board, x, y) {
-    let neighbors = 0;
+  /* CALCULA CELULAS VIZINHAS*/
+  calcularVizinhos(tabuleiro, x, y) {
+    let vizinhos = 0;
     const dirs = [
       [-1, -1],
       [-1, 0],
@@ -146,56 +167,83 @@ class Board extends React.Component {
         x1 < this.cols &&
         y1 >= 0 &&
         y1 < this.rows &&
-        board[y1][x1]
+        tabuleiro[y1][x1]
       ) {
-        neighbors++;
+        vizinhos++;
       }
     }
 
-    return neighbors;
+    return vizinhos;
   }
 
+  //RESETA O TABULEIRO E AS SUAS CÉLULAS
+  tratarVazio = () => {
+    this.tabuleiro = this.criarTabuleiroVazio();
+    this.setState({ celulas: this.criarCelulas() });
+  };
+
+  //INICIA O JOGO COM CÉLULAS ALEATÓRIAS ATIVADAS/RENDERIZADAS
+  tratarAleatorio = () => {
+    for (let y = 0; y < this.rows; y++) {
+      for (let x = 0; x < this.cols; x++) {
+        this.tabuleiro[y][x] = Math.random() >= 0.5;
+      }
+    }
+
+    this.setState({ celulas: this.criarCelulas() });
+  };
+
   render() {
-    const { cells, interval, isRunning } = this.state;
+    const { celulas, interval, isRunning } = this.state;
     return (
       <div>
+        {/*RENDERIZAÇÃO DO TABULEIRO*/}
         <div
           className="board"
           style={{
-            width: boardWidth,
-            height: boardHeight,
-            backgroundSize: `${cellSize}px ${cellSize}px`,
+            width: tabuleiroWidth,
+            height: tabuleiroHeight,
+            backgroundSize: `${celulasize}px ${celulasize}px`,
             marginTop: "1%",
           }}
-          onClick={this.handleClick}
+          onClick={this.tratarClick}
           ref={(n) => {
-            this.boardRef = n;
+            this.tabuleiroRef = n;
           }}
         >
-          {cells.map((cell) => (
+          {/*CELULAS*/}
+          {celulas.map((cell) => (
             <Cell x={cell.x} y={cell.y} key={`${cell.x},${cell.y}`} />
           ))}
         </div>
+        {/*CONTROLES PARA INICIAR OU PARAR O JOGO*/}
         <div className="controls">
           Update every
           <input
             value={this.state.interval}
-            onChange={this.handleIntervalChange}
+            onChange={this.tratarMudancaIntervalo}
+            className="update-time"
           />
           msec
           {isRunning ? (
-            <button className="button" onClick={this.stopGame}>
-              Stop
+            <button className="button" onClick={this.pararJogo}>
+              Parar
             </button>
           ) : (
-            <button className="button" onClick={this.runGame}>
-              Run
+            <button className="button" onClick={this.iniciarJogo}>
+              Executar
             </button>
-          )}{" "}
+          )}
+          <button className="button" onClick={this.tratarAleatorio}>
+            Iniciar células
+          </button>
+          <button className="button" onClick={this.tratarVazio}>
+            Reset
+          </button>{" "}
         </div>{" "}
       </div>
     );
   }
 }
 
-export default Board;
+export default Tabuleiro;
