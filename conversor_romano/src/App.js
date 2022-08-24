@@ -113,33 +113,41 @@ function App() {
 
   return (
     <div className="App">
+      <div className="">Número natural para romano</div>
       <div className="display">{valor}</div>
       <div className="input-container">
         <input
           type="text"
           value={inputValor}
           onChange={(e) => setInputValor(e.target.value)}
+          placeholder="Digite um numero natural..."
+          className="input"
         />
         <button
           type="button"
           onClick={() => setValor(converterParaRomano(inputValor))}
+          className="btn"
         >
-          Convert
+          Converter
         </button>
       </div>
-      <div className="display">
-        <div>{valorArabico}</div>
+      <div>
+        <div className="roman-calc">Número romano para natural</div>
+        <div className="display">{valorArabico}</div>
         <div className="input-container">
           <input
             type="text"
+            placeholder="Digite numerais romanos..."
             value={strValue}
             onChange={(e) => setStrValue(e.target.value)}
+            className="input"
           />
           <button
             type="button"
             onClick={() => setValorArabico(converterParaArabico(strValue))}
+            className="btn"
           >
-            Convert
+            Converter
           </button>
         </div>
       </div>
