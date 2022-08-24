@@ -106,9 +106,16 @@ const converterParaRomano = (num) => {
 };
 
 function App() {
+  //DISPLAY VALOR ROMANO
   const [valor, setValor] = useState(0);
+
+  //DISPLAY DO INPUT NUMERICO PARA ROMANO
   const [inputValor, setInputValor] = useState(0);
+
+  //DISPLAY DO INPUT ROMANO PARA NUMERICO
   const [strValue, setStrValue] = useState("");
+
+  //DISPLAY DO VALOR ARABICO
   const [valorArabico, setValorArabico] = useState(0);
 
   return (
