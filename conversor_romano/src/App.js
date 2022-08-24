@@ -1,6 +1,61 @@
 import React, { useState } from "react";
 import "./App.css";
 
+const converterParaArabico = (str) => {
+  const numeraisRomanos = [
+    "CM",
+    "M",
+    "CD",
+    "D",
+    "XC",
+    "C",
+    "XL",
+    "L",
+    "IX",
+    "X",
+    "IV",
+    "V",
+    "I",
+  ];
+
+  const valoresCorrespondentes = [
+    900, 1000, 400, 500, 90, 100, 40, 50, 9, 10, 4, 5, 1,
+  ];
+
+  let indice,
+    num = 0;
+
+  //PADRONIZA LETRAS PARA COMAPRAÇÃO
+  str = str.toUpperCase();
+
+  //LAÇO DE REPETIÇÃO PARA DETERMINAR A STRING FINAL
+  for (let idx in numeraisRomanos) {
+    //ENCONTRA O INDICE NA STRING DOS VALORES ROMANOS
+    indice = str.indexOf(numeraisRomanos[idx]);
+
+    //ENQUANTO O INDICE FOR VALIDO...
+    while (indice !== -1) {
+      //SOMA O VALOR A VARIAVEL NUMERICA
+      num += parseInt(valoresCorrespondentes[idx]);
+
+      //TORNA O ELEMENTO NA STRING DE INPUT UM "-" PARA NÃO SER COMPUTADO NOVAMENTE
+      str = str.replace(numeraisRomanos[idx], "-");
+
+      //NOVO INDICE É GERADO VISTO QUE APÓS SER COMPUTADO O ANTERIOR SE TORNA UM TRAÇO("-")
+      indice = str.indexOf(numeraisRomanos[idx]);
+    }
+  }
+
+  //RETORNA O NUMERO QUANDO O INDICE NÃO FOR MAIOR QUE -1
+  return num;
+};
+
+/* 
+ 
+ O NUMERO INSERIDO COMO INPUT É DETERMINADO DE ACORDO COM SEU VALOR
+ E AO COMPUTAR O VALOR DE STRING O NÚMERO SOFRE DECREMENTOS ATÉ ATINGIR
+ 0 OU MENOS, AO FINAL RETORNANDO O VALOR NUMÉRICO.   
+*/
 const converterParaRomano = (num) => {
   let romanNumeral = "";
 
@@ -46,15 +101,15 @@ const converterParaRomano = (num) => {
       num -= 1;
     }
   }
-  console.log(romanNumeral);
+
   return romanNumeral;
 };
-
-const converterParaNumeral = () => {};
 
 function App() {
   const [valor, setValor] = useState(0);
   const [inputValor, setInputValor] = useState(0);
+  const [strValue, setStrValue] = useState("");
+  const [valorArabico, setValorArabico] = useState(0);
 
   return (
     <div className="App">
@@ -71,6 +126,22 @@ function App() {
         >
           Convert
         </button>
+      </div>
+      <div className="display">
+        <div>{valorArabico}</div>
+        <div className="input-container">
+          <input
+            type="text"
+            value={strValue}
+            onChange={(e) => setStrValue(e.target.value)}
+          />
+          <button
+            type="button"
+            onClick={() => setValorArabico(converterParaArabico(strValue))}
+          >
+            Convert
+          </button>
+        </div>
       </div>
     </div>
   );
