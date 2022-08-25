@@ -7,7 +7,6 @@ function App() {
   const [preco, setPreco] = useState(0);
   const [nome, setNome] = useState("");
   let clientes = [];
-  let produtos = [];
 
   /*
     TODO: ADICIONAR PRODUTOS EM SEU VETOR & BUSCAR PELO NOME DO CLIENTE A FIM DE GERAR SUA CONTA
@@ -15,11 +14,17 @@ function App() {
     TEM A PAGAR. 
   */
   const addProduct = ({ nome, produto, preco }) => {
+    let produtos = [];
     produtos.push({ nome, produto, preco });
+
+    console.log(produtos);
+
     setProduto("");
     setPreco(0);
+
+    return produtos;
   };
-  const adicionarCliente = () => {};
+
   return (
     <div className="App">
       {/*ADICIONAR NOME CLIENTE*/}
@@ -46,9 +51,20 @@ function App() {
       >
         Adicionar outro produto
       </button>
-      <button type="button" onClick={() => adicionarCliente(nome)}>
-        Adicionar cliente
-      </button>
+      <button type="button">Adicionar cliente</button>
+      <div>
+        {cliente.map((e) => {
+          const { nome, produto, preco } = e;
+          return (
+            <div>
+              <div>{nome}</div>
+              <div>
+                {produto} - {preco}
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
