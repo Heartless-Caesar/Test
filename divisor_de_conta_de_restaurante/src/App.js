@@ -3,6 +3,7 @@ import "./App.css";
 
 function App() {
   const [cliente, setCliente] = useState([]);
+  const [produtos, setProdutos] = useState([]);
   const [produto, setProduto] = useState("");
   const [preco, setPreco] = useState(0);
   const [nome, setNome] = useState("");
@@ -14,15 +15,10 @@ function App() {
     TEM A PAGAR. 
   */
   const addProduct = ({ nome, produto, preco }) => {
-    let produtos = [];
-    produtos.push({ nome, produto, preco });
-
+    setProdutos((res) => [...res, { nome, produto, preco }]);
     console.log(produtos);
-
     setProduto("");
-    setPreco(0);
-
-    return produtos;
+    setPreco("");
   };
 
   return (
@@ -53,11 +49,10 @@ function App() {
       </button>
       <button type="button">Adicionar cliente</button>
       <div>
-        {cliente.map((e) => {
+        {produtos.map((e) => {
           const { nome, produto, preco } = e;
           return (
             <div>
-              <div>{nome}</div>
               <div>
                 {produto} - {preco}
               </div>
