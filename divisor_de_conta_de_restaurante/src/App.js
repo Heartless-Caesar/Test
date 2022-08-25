@@ -15,7 +15,9 @@ function App() {
     TEM A PAGAR. 
   */
   const addProduct = ({ nome, produto, preco }) => {
-    setProdutos((res) => [...res, { nome, produto, preco }]);
+    const produtosAtualizados = [...produtos, { nome, produto, preco }];
+    setProdutos(produtosAtualizados);
+
     console.log(produtos);
     setProduto("");
     setPreco("");
