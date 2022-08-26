@@ -65,6 +65,13 @@ function App() {
         >
           Adicionar cliente
         </button>
+        <button
+          type="button"
+          className="btn"
+          onClick={() => addCliente({ nome: nome })}
+        >
+          Concluir pedido
+        </button>
       </div>
       <div className="product-div">
         {produtos.map((e) => {

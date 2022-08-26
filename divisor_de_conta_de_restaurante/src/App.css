@@ -19,6 +19,11 @@ body {
   background-color: rgba(red, green, blue, 0.9);
   cursor: pointer;
 }
+
+.product-div {
+  margin-top: 10px;
+}
+
 .input-div {
   background-color: #212121;
   padding: 10px;
