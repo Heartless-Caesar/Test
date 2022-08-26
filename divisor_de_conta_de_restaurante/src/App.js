@@ -25,6 +25,8 @@ function App() {
     setPreco("");
   };
 
+  const addCliente = ({ nome, produto, preco }) => {};
+
   return (
     <div className="App">
       <div className="input-div">
@@ -56,17 +58,21 @@ function App() {
         >
           Adicionar outro produto
         </button>
-        <button type="button" className="btn">
+        <button
+          type="button"
+          className="btn"
+          onClick={() => addCliente({ nome: nome })}
+        >
           Adicionar cliente
         </button>
       </div>
-      <div>
+      <div className="product-div">
         {produtos.map((e) => {
           const { nome, produto, preco } = e;
           return (
             <div>
               <div>
-                {nome} : {produto} - {preco}
+                cliente {nome} : {produto} - {preco}
               </div>
             </div>
           );
