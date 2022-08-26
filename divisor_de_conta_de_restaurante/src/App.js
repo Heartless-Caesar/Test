@@ -15,8 +15,10 @@ function App() {
     TEM A PAGAR. 
   */
   const addProduct = ({ nome, produto, preco }) => {
-    const produtosAtualizados = [...produtos, { nome, produto, preco }];
-    setProdutos(produtosAtualizados);
+    if (produto.length > 0) {
+      const produtosAtualizados = [...produtos, { nome, produto, preco }];
+      setProdutos(produtosAtualizados);
+    }
 
     console.log(produtos);
     setProduto("");
@@ -25,38 +27,46 @@ function App() {
 
   return (
     <div className="App">
-      {/*ADICIONAR NOME CLIENTE*/}
-      <input
-        value={nome}
-        placeholder="Digite o nome do cliente aqui..."
-        onChange={(e) => setNome(e.target.value)}
-      />
-      <input
-        value={produto}
-        placeholder="Digite o nome do produto aqui..."
-        onChange={(e) => setProduto(e.target.value)}
-      />
-      <input
-        value={preco}
-        placeholder="Digite o preço do produto aqui..."
-        onChange={(e) => setPreco(e.target.value)}
-      />
-      <button
-        type="button"
-        onClick={() =>
-          addProduct({ nome: nome, produto: produto, preco: preco })
-        }
-      >
-        Adicionar outro produto
-      </button>
-      <button type="button">Adicionar cliente</button>
+      <div className="input-div">
+        {/*ADICIONAR NOME CLIENTE*/}
+        <input
+          value={nome}
+          placeholder="Digite o nome do cliente aqui..."
+          onChange={(e) => setNome(e.target.value)}
+          className="input"
+        />
+        <input
+          value={produto}
+          placeholder="Digite o nome do produto aqui..."
+          onChange={(e) => setProduto(e.target.value)}
+          className="input"
+        />
+        <input
+          value={preco}
+          placeholder="Digite o preço do produto aqui..."
+          onChange={(e) => setPreco(e.target.value)}
+          className="input"
+        />
+        <button
+          type="button"
+          onClick={() =>
+            addProduct({ nome: nome, produto: produto, preco: preco })
+          }
+          className="btn"
+        >
+          Adicionar outro produto
+        </button>
+        <button type="button" className="btn">
+          Adicionar cliente
+        </button>
+      </div>
       <div>
         {produtos.map((e) => {
           const { nome, produto, preco } = e;
           return (
             <div>
               <div>
-                {produto} - {preco}
+                {nome} : {produto} - {preco}
               </div>
             </div>
           );
