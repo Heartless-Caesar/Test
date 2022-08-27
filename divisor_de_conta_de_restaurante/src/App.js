@@ -1,42 +1,83 @@
 import React, { useState } from "react";
 import "./App.css";
+import Select from "react-select";
 
 function App() {
-  const [cliente, setCliente] = useState([]);
+  const [selectValue, setSelectValue] = useState("");
   const [produtos, setProdutos] = useState([]);
+  const [cliente, setCliente] = useState([]);
+  const [pedidos, setPedidos] = useState([]);
   const [produto, setProduto] = useState("");
+  const [servicePrice, setServicePrice] = useState(false);
   const [preco, setPreco] = useState(0);
+  const [value, setValue] = useState("");
   const [nome, setNome] = useState("");
   let clientes = [];
 
-  /*
-    TODO: ADICIONAR PRODUTOS EM SEU VETOR & BUSCAR PELO NOME DO CLIENTE A FIM DE GERAR SUA CONTA
-    E POSTERIORMENTE TRATAR COMO ADICIONAR NOVOS CLIENTES, FINALMENTE CALCULANDO O VALOR QUE CADA UM
-    TEM A PAGAR. 
-  */
-  const addProduct = ({ nome, produto, preco }) => {
+  //ADICIONA UM PRODUTO A UM VETOR DE PRODUTOS SIMILAR A UM CATALOGO DINAMICO
+  const addProduct = ({ produto, preco }) => {
     if (produto.length > 0) {
-      const produtosAtualizados = [...produtos, { nome, produto, preco }];
+      const produtosAtualizados = [
+        ...produtos,
+        { label: produto, value: preco },
+      ];
       setProdutos(produtosAtualizados);
     }
-
     console.log(produtos);
     setProduto("");
     setPreco("");
   };
 
-  const addCliente = ({ nome, produto, preco }) => {};
+  //ADICIONA UM CLIENTE A LISTA DE CLIENTES DO PEDIDO ATUAL
+  const addCliente = ({ nome }) => {
+    const clientesAtualizados = [...cliente, { nome }];
+
+    setCliente(clientesAtualizados);
+    console.log(cliente);
+    setNome("");
+  };
+
+  //ADICIONA O PRODUTO A CONTA DE UM CLIENTE DO ATUAL PEDIDO
+  const addToBill = ({ nome, counter }) => {
+    if (nome.length > 0) {
+      console.log(nome);
+      setPedidos((res) => [...res, { nome, counter, ...produtos }]);
+      console.log(pedidos);
+    }
+  };
+
+  //VERIFCA AS CONDIÇÕES ESTABEELCIDAS PARA COMPUTAR O CUSTO DE CADA PEDIDO
+  const calcularCusto = () => {
+    for (let index = 0; index < cliente.length; index++) {
+      const element = cliente[index];
+      const selectElm = pedidos[index];
+      console.log(element);
+      console.log(selectElm);
+
+      if (element[nome] === selectElm[nome]) {
+        console.log(`Element : ${element.nome}, ${selectElm.counter}`);
+        console.log(element);
+        //FAZER COM QUE ENCONTRE O PRODUTO DO PEDIDO NO VETOR DE PRODUTOS
+        if (pedidos[index].label === element[index]?.nome) {
+          selectElm[index].counter += produtos[index].value;
+        }
+        console.log(selectElm[index].counter);
+      }
+    }
+  };
+  //ATUALIZA PARA VERIFICAR SE O CLIENTE IRA PAGAR A TAXA DE SERVIÇO OU NÃO
+  const handleServicePrice = () => {
+    if (servicePrice === false) {
+      setServicePrice(true);
+    } else {
+      setServicePrice(false);
+    }
+  };
 
   return (
     <div className="App">
-      <div className="input-div">
-        {/*ADICIONAR NOME CLIENTE*/}
-        <input
-          value={nome}
-          placeholder="Digite o nome do cliente aqui..."
-          onChange={(e) => setNome(e.target.value)}
-          className="input"
-        />
+      {/*ADICIONAR PRODUTO*/}
+      <div className="product-div">
         <input
           value={produto}
           placeholder="Digite o nome do produto aqui..."
@@ -51,35 +92,57 @@ function App() {
         />
         <button
           type="button"
-          onClick={() =>
-            addProduct({ nome: nome, produto: produto, preco: preco })
-          }
+          onClick={() => addProduct({ produto: produto, preco: preco })}
           className="btn"
         >
           Adicionar outro produto
         </button>
+      </div>
+      <div className="input-div">
+        {/*ADICIONAR CLIENTE*/}
+        <input
+          value={nome}
+          placeholder="Digite o nome do cliente aqui..."
+          onChange={(e) => setNome(e.target.value)}
+          className="input"
+        />
+        <div className="insert-product">
+          <Select options={produtos} className="select" />
+          <button
+            type="button"
+            className="btn"
+            onClick={() => addToBill({ nome: nome, counter: 0 })}
+          >
+            Adicionar ao pedido deste cliente
+          </button>
+          <div className="checkbox-div">
+            <label for="service-checkbox">Irá pagar a taxa de serviço?</label>
+            <input
+              type="checkbox"
+              className="service-checkbox"
+              onClick={() => handleServicePrice()}
+            />
+          </div>
+        </div>
         <button
           type="button"
           className="btn"
-          onClick={() => addCliente({ nome: nome })}
+          onClick={() => addCliente({ nome: nome, counter: 0 })}
         >
-          Adicionar cliente
+          Adicionar novo cliente
         </button>
-        <button
-          type="button"
-          className="btn"
-          onClick={() => addCliente({ nome: nome })}
-        >
+        <button type="button" className="btn" onClick={calcularCusto}>
           Concluir pedido
         </button>
       </div>
       <div className="product-div">
+        Produtos inseridos:
         {produtos.map((e) => {
-          const { nome, produto, preco } = e;
+          const { label, value } = e;
           return (
             <div>
               <div>
-                cliente {nome} : {produto} - {preco}
+                {label} - {value}
               </div>
             </div>
           );
