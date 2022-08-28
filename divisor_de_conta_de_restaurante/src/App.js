@@ -10,7 +10,7 @@ function App() {
   const [produto, setProduto] = useState("");
   const [servicePrice, setServicePrice] = useState(false);
   const [preco, setPreco] = useState(0);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(0);
   const [nome, setNome] = useState("");
   let clientes = [];
 
@@ -48,22 +48,32 @@ function App() {
 
   //VERIFCA AS CONDIÇÕES ESTABEELCIDAS PARA COMPUTAR O CUSTO DE CADA PEDIDO
   const calcularCusto = () => {
+    let total = 0;
+    let sum = 0;
     for (let index = 0; index < cliente.length; index++) {
       const element = cliente[index];
       const selectElm = pedidos[index];
+
       console.log(element);
       console.log(selectElm);
 
-      if (element[nome] === selectElm[nome]) {
-        console.log(`Element : ${element.nome}, ${selectElm.counter}`);
-        console.log(element);
-        //FAZER COM QUE ENCONTRE O PRODUTO DO PEDIDO NO VETOR DE PRODUTOS
-        if (pedidos[index].label === element[index]?.nome) {
-          selectElm[index].counter += produtos[index].value;
+      console.log(`Element : ${element.nome}, ${selectElm.counter}`);
+      console.log(element);
+      //FAZER COM QUE ENCONTRE O PRODUTO DO PEDIDO NO VETOR DE PRODUTOS
+      for (let idx = 0; idx < produtos.length; idx++) {
+        if (element[nome] === selectElm[idx][nome]) {
+          if (pedidos[index].label === element[idx]?.nome) {
+            sum = pedidos.reduce(
+              (prev, next) => prev + selectElm[idx].value,
+              0
+            );
+          }
+          sum += selectElm[index].counter;
+          console.log(total);
         }
-        console.log(selectElm[index].counter);
       }
     }
+    setValue(total);
   };
   //ATUALIZA PARA VERIFICAR SE O CLIENTE IRA PAGAR A TAXA DE SERVIÇO OU NÃO
   const handleServicePrice = () => {
@@ -148,6 +158,7 @@ function App() {
           );
         })}
       </div>
+      <div>Valor total: {value}</div>
     </div>
   );
 }
