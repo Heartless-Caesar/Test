@@ -10,7 +10,7 @@ function Divisor() {
   const [pedidos, setPedidos] = useState([]);
   const [produto, setProduto] = useState("");
   const [servicePrice, setServicePrice] = useState(false);
-  const [preco, setPreco] = useState(0);
+  const [preco, setPreco] = useState("");
   const [value, setValue] = useState(0);
   const [nome, setNome] = useState("");
   let clientes = [];
