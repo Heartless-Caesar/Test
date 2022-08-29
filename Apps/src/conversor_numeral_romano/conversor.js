@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Navbar from "../Navbar";
 import "./App.css";
 
 const converterParaArabico = (str) => {
@@ -105,7 +106,7 @@ const converterParaRomano = (num) => {
   return romanNumeral;
 };
 
-function App() {
+function Conversor() {
   //DISPLAY VALOR ROMANO
   const [valor, setValor] = useState(0);
 
@@ -119,47 +120,50 @@ function App() {
   const [valorArabico, setValorArabico] = useState(0);
 
   return (
-    <div className="App">
-      <div className="">Número natural para romano</div>
-      <div className="display">{valor}</div>
-      <div className="input-container">
-        <input
-          type="text"
-          value={inputValor}
-          onChange={(e) => setInputValor(e.target.value)}
-          placeholder="Digite um numero natural..."
-          className="input"
-        />
-        <button
-          type="button"
-          onClick={() => setValor(converterParaRomano(inputValor))}
-          className="btn"
-        >
-          Converter
-        </button>
-      </div>
-      <div>
-        <div className="roman-calc">Número romano para natural</div>
-        <div className="display">{valorArabico}</div>
+    <>
+      <Navbar />
+      <div className="App">
+        <div className="">Número natural para romano</div>
+        <div className="display">{valor}</div>
         <div className="input-container">
           <input
             type="text"
-            placeholder="Digite numerais romanos..."
-            value={strValue}
-            onChange={(e) => setStrValue(e.target.value)}
+            value={inputValor}
+            onChange={(e) => setInputValor(e.target.value)}
+            placeholder="Digite um numero natural..."
             className="input"
           />
           <button
             type="button"
-            onClick={() => setValorArabico(converterParaArabico(strValue))}
+            onClick={() => setValor(converterParaRomano(inputValor))}
             className="btn"
           >
             Converter
           </button>
         </div>
+        <div>
+          <div className="roman-calc">Número romano para natural</div>
+          <div className="display">{valorArabico}</div>
+          <div className="input-container">
+            <input
+              type="text"
+              placeholder="Digite numerais romanos..."
+              value={strValue}
+              onChange={(e) => setStrValue(e.target.value)}
+              className="input"
+            />
+            <button
+              type="button"
+              onClick={() => setValorArabico(converterParaArabico(strValue))}
+              className="btn"
+            >
+              Converter
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
-export default App;
+export default Conversor;

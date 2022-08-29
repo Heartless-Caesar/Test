@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import "./App.css";
 import Select from "react-select";
+import Navbar from "../Navbar";
 
-function App() {
+function Divisor() {
   const [selectValue, setSelectValue] = useState("");
   const [produtos, setProdutos] = useState([]);
   const [cliente, setCliente] = useState([]);
@@ -85,82 +86,85 @@ function App() {
   };
 
   return (
-    <div className="App">
-      {/*ADICIONAR PRODUTO*/}
-      <div className="product-div">
-        <input
-          value={produto}
-          placeholder="Digite o nome do produto aqui..."
-          onChange={(e) => setProduto(e.target.value)}
-          className="input"
-        />
-        <input
-          value={preco}
-          placeholder="Digite o preço do produto aqui..."
-          onChange={(e) => setPreco(e.target.value)}
-          className="input"
-        />
-        <button
-          type="button"
-          onClick={() => addProduct({ produto: produto, preco: preco })}
-          className="btn"
-        >
-          Adicionar outro produto
-        </button>
-      </div>
-      <div className="input-div">
-        {/*ADICIONAR CLIENTE*/}
-        <input
-          value={nome}
-          placeholder="Digite o nome do cliente aqui..."
-          onChange={(e) => setNome(e.target.value)}
-          className="input"
-        />
-        <div className="insert-product">
-          <Select options={produtos} className="select" />
+    <>
+      <Navbar />
+      <div className="App">
+        {/*ADICIONAR PRODUTO*/}
+        <div className="product-div">
+          <input
+            value={produto}
+            placeholder="Digite o nome do produto aqui..."
+            onChange={(e) => setProduto(e.target.value)}
+            className="input"
+          />
+          <input
+            value={preco}
+            placeholder="Digite o preço do produto aqui..."
+            onChange={(e) => setPreco(e.target.value)}
+            className="input"
+          />
+          <button
+            type="button"
+            onClick={() => addProduct({ produto: produto, preco: preco })}
+            className="btn"
+          >
+            Adicionar outro produto
+          </button>
+        </div>
+        <div className="input-div">
+          {/*ADICIONAR CLIENTE*/}
+          <input
+            value={nome}
+            placeholder="Digite o nome do cliente aqui..."
+            onChange={(e) => setNome(e.target.value)}
+            className="input"
+          />
+          <div className="insert-product">
+            <Select options={produtos} className="select" />
+            <button
+              type="button"
+              className="btn"
+              onClick={() => addToBill({ nome: nome, counter: 0 })}
+            >
+              Adicionar ao pedido deste cliente
+            </button>
+            <div className="checkbox-div">
+              <label for="service-checkbox">Irá pagar a taxa de serviço?</label>
+              <input
+                type="checkbox"
+                className="service-checkbox"
+                onClick={() => handleServicePrice()}
+              />
+            </div>
+          </div>
           <button
             type="button"
             className="btn"
-            onClick={() => addToBill({ nome: nome, counter: 0 })}
+            onClick={() => addCliente({ nome: nome, counter: 0 })}
           >
-            Adicionar ao pedido deste cliente
+            Adicionar novo cliente
           </button>
-          <div className="checkbox-div">
-            <label for="service-checkbox">Irá pagar a taxa de serviço?</label>
-            <input
-              type="checkbox"
-              className="service-checkbox"
-              onClick={() => handleServicePrice()}
-            />
-          </div>
+          <button type="button" className="btn" onClick={calcularCusto}>
+            Concluir pedido
+          </button>
         </div>
-        <button
-          type="button"
-          className="btn"
-          onClick={() => addCliente({ nome: nome, counter: 0 })}
-        >
-          Adicionar novo cliente
-        </button>
-        <button type="button" className="btn" onClick={calcularCusto}>
-          Concluir pedido
-        </button>
-      </div>
-      <div className="product-div">
-        Produtos inseridos:
-        {produtos.map((e) => {
-          const { label, value } = e;
-          return (
-            <div>
+        <div className="product-div">
+          Produtos inseridos:
+          {produtos.map((e) => {
+            const { label, value } = e;
+            return (
               <div>
-                {label} - {value}
+                <div>
+                  {label} - {value}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
+        <div>Valor total: {value}</div>
       </div>
-      <div>Valor total: {value}</div>
-    </div>
+    </>
   );
 }
 
-export default App;
+export default Divisor;

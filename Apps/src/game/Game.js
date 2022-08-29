@@ -1,4 +1,5 @@
 import React from "react";
+import Navbar from "../Navbar";
 import "../styles/game-styles.css";
 
 const celulasize = 20;
@@ -196,52 +197,55 @@ class Tabuleiro extends React.Component {
   render() {
     const { celulas, interval, isRunning } = this.state;
     return (
-      <div>
-        {/*RENDERIZAÇÃO DO TABULEIRO*/}
-        <div
-          className="board"
-          style={{
-            width: tabuleiroWidth,
-            height: tabuleiroHeight,
-            backgroundSize: `${celulasize}px ${celulasize}px`,
-            marginTop: "1%",
-          }}
-          onClick={this.tratarClick}
-          ref={(n) => {
-            this.tabuleiroRef = n;
-          }}
-        >
-          {/*CELULAS*/}
-          {celulas.map((cell) => (
-            <Cell x={cell.x} y={cell.y} key={`${cell.x},${cell.y}`} />
-          ))}
+      <>
+        <Navbar />
+        <div>
+          {/*RENDERIZAÇÃO DO TABULEIRO*/}
+          <div
+            className="board"
+            style={{
+              width: tabuleiroWidth,
+              height: tabuleiroHeight,
+              backgroundSize: `${celulasize}px ${celulasize}px`,
+              marginTop: "1%",
+            }}
+            onClick={this.tratarClick}
+            ref={(n) => {
+              this.tabuleiroRef = n;
+            }}
+          >
+            {/*CELULAS*/}
+            {celulas.map((cell) => (
+              <Cell x={cell.x} y={cell.y} key={`${cell.x},${cell.y}`} />
+            ))}
+          </div>
+          {/*CONTROLES PARA INICIAR OU PARAR O JOGO*/}
+          <div className="controls">
+            Update every
+            <input
+              value={this.state.interval}
+              onChange={this.tratarMudancaIntervalo}
+              className="update-time"
+            />
+            msec
+            {isRunning ? (
+              <button className="button" onClick={this.pararJogo}>
+                Parar
+              </button>
+            ) : (
+              <button className="button" onClick={this.iniciarJogo}>
+                Executar
+              </button>
+            )}
+            <button className="button" onClick={this.tratarAleatorio}>
+              Iniciar células
+            </button>
+            <button className="button" onClick={this.tratarVazio}>
+              Reset
+            </button>{" "}
+          </div>{" "}
         </div>
-        {/*CONTROLES PARA INICIAR OU PARAR O JOGO*/}
-        <div className="controls">
-          Update every
-          <input
-            value={this.state.interval}
-            onChange={this.tratarMudancaIntervalo}
-            className="update-time"
-          />
-          msec
-          {isRunning ? (
-            <button className="button" onClick={this.pararJogo}>
-              Parar
-            </button>
-          ) : (
-            <button className="button" onClick={this.iniciarJogo}>
-              Executar
-            </button>
-          )}
-          <button className="button" onClick={this.tratarAleatorio}>
-            Iniciar células
-          </button>
-          <button className="button" onClick={this.tratarVazio}>
-            Reset
-          </button>{" "}
-        </div>{" "}
-      </div>
+      </>
     );
   }
 }
